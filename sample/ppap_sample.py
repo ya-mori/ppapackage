@@ -41,10 +41,12 @@ class CleanLabelCassette(ConversionCassette):
     """
     @staticmethod
     def to_process(dataframe: pd.DataFrame) -> pd.Series:
+        super().to_process(dataframe)
         return CleanLabelCassette.extract(dataframe)
 
     @staticmethod
     def extract(dataframe: pd.DataFrame) -> pd.Series:
+        super().extract(dataframe)
         return dataframe['0']
 
 

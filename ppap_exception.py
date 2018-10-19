@@ -16,3 +16,9 @@ class OverCassetteException(PPAPException):
     """
     すでにカセットがセットされている場合にスローさせるExceptionです。
     """
+
+
+class CassetteValidateException(PPAPException):
+    """
+    カセットのバリデーションチェックでスローさせるExceptionです。
+    """

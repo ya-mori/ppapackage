@@ -55,7 +55,7 @@ class DataFramePrayer:
         :return: self
         """
         if self.cassette is not None:
-            logger.warn('カセットがすでに刺さっています') #TODO 機能していないかも
+            logger.warn('カセットがすでに刺さっています')  #TODO 機能していないかも
             raise OverCassetteException
         else:
             self.cassette = cassette

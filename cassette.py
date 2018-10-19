@@ -1,5 +1,18 @@
 import pandas as pd
 
+from ppap_exception import CassetteValidateException
+
+
+class CassetteValidator:
+    """
+    カセットが取り扱うデータのパリデーションチェックを行います。
+    """
+
+    @classmethod
+    def run(cls, dataframe):
+        if type(dataframe) is pd.DataFrame:
+            raise CassetteValidateException
+
 
 class ConversionCassette:
     """
@@ -8,6 +21,8 @@ class ConversionCassette:
 
     DataFrameに対する変換処理を実装する際には、ユースケース単位でこのクラスをOverrideして実装してください。
     """
+
+    validation = CassetteValidator()
 
     @staticmethod
     def to_process(dataframe):
@@ -18,7 +33,8 @@ class ConversionCassette:
         :param dataframe: データフレーム
         :return: 処理結果
         """
-        return ConversionCassette.add(dataframe)
+        ConversionCassette.validation.run(dataframe)
+        return dataframe
 
     @staticmethod
     def extract(dataframe) -> pd.DataFrame:
@@ -28,6 +44,7 @@ class ConversionCassette:
         :param dataframe: データフレーム
         :return: 抽出した結果
         """
+        ConversionCassette.validation.run(dataframe)
         return dataframe
 
     @staticmethod
@@ -38,6 +55,7 @@ class ConversionCassette:
         :param dataframe: データフレーム
         :return: 追加したデータフレーム
         """
+        ConversionCassette.validation.run(dataframe)
         return dataframe
 
 
