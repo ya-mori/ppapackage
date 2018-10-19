@@ -1,19 +1,24 @@
 """
 ppapackage の使用例を実装したサンプルコードです。
+
 """
 
 import pandas as pd
-from lightgbm import LGBMModel
-import time
+from lightgbm import LGBMClassifier
+
+import pen
+import lightgbm_executer as lgbexe
 from logger import logger as logger
 from cross_validator import CrossValidator
 from cassette import ConversionCassette
 from data_frame_prayer import DataFramePrayer
-import lightgbm_executer as lgbexe
 
 
 """
 ケースにあわせて定義するもの
+
+・それぞれのユースケースに合わせてデータを処理するカセット
+・機械学習のモデルを使った処理
 """
 
 
@@ -22,12 +27,25 @@ class MeanCassette(ConversionCassette):
     平均値を計算するカセットです。
     """
     @staticmethod
-    def to_process(dataframe):
+    def to_process(dataframe: pd.DataFrame) -> pd.Series:
         return MeanCassette.extract(dataframe)
 
     @staticmethod
-    def extract(dataframe):
+    def extract(dataframe: pd.DataFrame) -> pd.Series:
         return dataframe.mean
+
+
+class CleanLabelCassette(ConversionCassette):
+    """
+    ラベル用のデータを整形するカセットです。
+    """
+    @staticmethod
+    def to_process(dataframe: pd.DataFrame) -> pd.Series:
+        return CleanLabelCassette.extract(dataframe)
+
+    @staticmethod
+    def extract(dataframe: pd.DataFrame) -> pd.Series:
+        return dataframe['0']
 
 
 def __objective(train, train_target, valid, valid_target):
@@ -42,7 +60,8 @@ def __objective(train, train_target, valid, valid_target):
     :return: 学習済みのモデル
     """
     # 適当に設定する
-    model = LGBMModel(
+    model = LGBMClassifier(
+        boosting_type='dart',
         random_state=1,
         n_estimators=10000,
         num_leaves=32,
@@ -73,37 +92,38 @@ if __name__ == '__main__':
 
     logger.info('example start!')
 
-    start = time.time()
+    pen.start()
 
-    train_data_path = './train_data.csv'
-    target_data_path = './label_data.csv'
+    train_data_path = './sample/train_data.csv'
+    label_data_path = './sample/label_data.csv'
 
     # データの読み込み
     train_data_player = DataFramePrayer.load_csv(train_data_path)
-    target_data_player = DataFramePrayer.load_csv(target_data_path)
+    label_data_player = DataFramePrayer.load_csv(label_data_path)
 
     # 平均値の算出
-    train_data_mean = train_data_player.add_cassette(MeanCassette).play()
+    train_data_mean = MeanCassette.extract(train_data_player.df)
+
+    label_data_player.add_cassette(CleanLabelCassette).play()
+
+    spilt = 5
 
     # クロスバリデーションの設定
     validator = CrossValidator(
         objective=__objective,
-        spilt=5,
+        spilt=spilt,
         train_data=train_data_player.df,
-        target_data=target_data_player.df
+        label_data=label_data_player.df
     )
 
     feature_columns = train_data_player.df.columns
 
     sub_predicts = pd.DataFrame()
     for folds, clf in validator:
-        predicts = clf.predict_proba(train_data_player.df, num_iteration=clf.best_iteration_)[:, 1] / folds.n_splits
-        sub_predicts.concat()
+        predicts = clf.predict_proba(train_data_player.df, num_iteration=clf.best_iteration_)[:, 1] / spilt
         fold_importance_df = lgbexe.analyze_lightgbm(clf, feature_columns)
 
     DataFramePrayer(sub_predicts).save_csv('result', './', is_attend_date=True)
 
-    end = time.time()
-
-    logger.info('training time: {}'.format(str(round((end - start) / 60)), 'mins'))
+    pen.end()
 

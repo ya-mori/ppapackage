@@ -1,5 +1,6 @@
 import pandas as pd
 from typing import Callable
+from typing import TypeVar
 from sklearn.model_selection import StratifiedKFold
 from sklearn.model_selection import KFold
 
@@ -21,7 +22,7 @@ class CrossValidator:
         fold = KFold(n_splits=split, shuffle=True, random_state=idx)
         return fold.split(self.train_data)
 
-    def __init__(self, objective: Callable, spilt: int, train_data: pd.DataFrame, target_data: pd.DataFrame):
+    def __init__(self, objective: Callable, spilt: int, train_data: pd.DataFrame, label_data: pd.DataFrame):
         """
         コンストラクタです
 
@@ -32,7 +33,7 @@ class CrossValidator:
         self.objective = objective
         self.spilt = spilt
         self.train_data = train_data
-        self.train_target_data = target_data
+        self.label_data = label_data
         self.k_folds = self.k_fold(spilt)
         self.index = 0
 
@@ -41,13 +42,13 @@ class CrossValidator:
         return self
 
     # イテレータを進める
-    def __next__(self):
+    def __next__(self) -> tuple:
         if self.index >= self.spilt - 1:
             raise StopIteration
 
         train_idx, valid_idx = next(self.k_folds)
-        train_x, train_y = self.train_data.iloc[train_idx], self.train_target_data.iloc[train_idx]
-        valid_x, valid_y = self.train_data.iloc[valid_idx], self.train_target_data.iloc[valid_idx]
+        train_x, train_y = self.train_data.iloc[train_idx], self.label_data.iloc[train_idx]
+        valid_x, valid_y = self.train_data.iloc[valid_idx], self.label_data.iloc[valid_idx]
 
         value = self.objective(train_x, train_y, valid_x, valid_y)
         index = self.index

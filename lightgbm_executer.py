@@ -5,10 +5,9 @@ LightGBMを用いた判別処理をまとめたモジュール群です。
 
 import pandas as pd
 from lightgbm import LGBMClassifier
-from lightgbm import LGBMModel
 
 
-def run_lightgbm(model: LGBMModel, train_x: pd.DataFrame, train_y: pd.DataFrame, eval_set: tuple) -> LGBMModel:
+def run_lightgbm(model: LGBMClassifier, train_x: pd.DataFrame, train_y: pd.DataFrame, eval_set: tuple) -> LGBMClassifier:
     """
     LightGBMを使った分類を行います
 
@@ -21,7 +20,7 @@ def run_lightgbm(model: LGBMModel, train_x: pd.DataFrame, train_y: pd.DataFrame,
     return
         clf.fit()の実行結果
     """
-    clf = LGBMClassifier(model)
+    clf = model
     clf.fit(train_x,
             train_y,
             eval_set=eval_set,
@@ -31,7 +30,7 @@ def run_lightgbm(model: LGBMModel, train_x: pd.DataFrame, train_y: pd.DataFrame,
     return clf
 
 
-def analyze_lightgbm(clf: LGBMModel, feature_columns: pd.Series) -> pd.DataFrame:
+def analyze_lightgbm(clf: LGBMClassifier, feature_columns: pd.Series) -> pd.DataFrame:
     """
     LightGBMを使った分類結果を評価します。
 

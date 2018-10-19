@@ -1,9 +1,9 @@
 import pandas as pd
 from datetime import datetime as dt
 from logger import logger as logger
-from .cassette import ConversionCassette
-from .ppap_exception import EmptyCassetteException
-from .ppap_exception import OverCassetteException
+from cassette import ConversionCassette
+from ppap_exception import EmptyCassetteException
+from ppap_exception import OverCassetteException
 
 
 class DataFramePrayer:
@@ -55,7 +55,7 @@ class DataFramePrayer:
         :return: self
         """
         if self.cassette is not None:
-            logger.warn('カセットがすでに刺さっています')
+            logger.warn('カセットがすでに刺さっています') #TODO 機能していないかも
             raise OverCassetteException
         else:
             self.cassette = cassette
@@ -71,5 +71,6 @@ class DataFramePrayer:
             logger.warn('カセットが刺さっていません')
             raise EmptyCassetteException
         else:
-            return self.cassette.to_process(self.df)
+            self.df = self.cassette.to_process(self.df)
+            return self
 

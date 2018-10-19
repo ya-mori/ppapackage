@@ -9,8 +9,8 @@ class ConversionCassette:
     DataFrameに対する変換処理を実装する際には、ユースケース単位でこのクラスをOverrideして実装してください。
     """
 
-    @classmethod
-    def to_process(cls, dataframe):
+    @staticmethod
+    def to_process(dataframe):
         """
         playerで実行する処理です。
         ユースケースに合わせて適宜Overrideしてください。
@@ -18,7 +18,7 @@ class ConversionCassette:
         :param dataframe: データフレーム
         :return: 処理結果
         """
-        return cls.add(dataframe)
+        return ConversionCassette.add(dataframe)
 
     @staticmethod
     def extract(dataframe) -> pd.DataFrame:
