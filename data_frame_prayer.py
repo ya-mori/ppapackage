@@ -31,7 +31,7 @@ class DataFramePrayer:
         df = pd.read_csv(path)
         return DataFramePrayer(df)
 
-    def save_csv(self, name, path, is_attend_date=True) -> pd.DataFrame:
+    def save_csv(self, name: str, path: str, is_attend_date=True):
         """
         DataFrameをCSV形式で保存します。
 
@@ -55,7 +55,7 @@ class DataFramePrayer:
         :return: self
         """
         if self.cassette is not None:
-            logger.warn('カセットがすでに刺さっています')  #TODO 機能していないかも
+            logger.warn('カセットがすでに刺さっています')  # TODO 機能していないかも
             raise OverCassetteException
         else:
             self.cassette = cassette
@@ -74,3 +74,10 @@ class DataFramePrayer:
             self.df = self.cassette.to_process(self.df)
             return self
 
+
+if __name__ == '__main__':
+
+    player = DataFramePrayer(pd.DataFrame())
+    player.add_cassette(ConversionCassette)
+    player.play()
+    player.add_cassette(ConversionCassette)
