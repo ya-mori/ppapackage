@@ -13,7 +13,6 @@ from cross_validator import CrossValidator
 from cassette import ConversionCassette
 from data_frame_prayer import DataFramePrayer
 
-
 """
 ケースにあわせて定義するもの
 
@@ -93,7 +92,7 @@ if __name__ == '__main__':
 
     logger.info('example start!')
 
-    pen.start()
+    pen.start(__file__)
 
     train_data_path = './sample/train_data.csv'
     label_data_path = './sample/label_data.csv'
@@ -124,7 +123,7 @@ if __name__ == '__main__':
         predicts = clf.predict_proba(train_data_player.df, num_iteration=clf.best_iteration_)[:, 1] / spilt
         fold_importance_df = lgbexe.analyze_lightgbm(clf, feature_columns)
 
-    DataFramePrayer(sub_predicts).save_csv('result', './', is_attend_date=True)
+    DataFramePrayer(sub_predicts).save_csv('result', '.', is_attend_date=True)
 
-    pen.end()
+    pen.end(__file__)
 
