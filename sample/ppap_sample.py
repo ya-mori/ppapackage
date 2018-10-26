@@ -2,6 +2,13 @@
 ppapackage の使用例を実装したサンプルコードです。
 
 """
+from os import path, pardir
+import sys
+current_dir = path.abspath(path.dirname(__file__))
+parent_dir = path.abspath(path.join(current_dir, pardir))
+sys.path.append(parent_dir)
+
+print(current_dir)
 
 import pandas as pd
 from lightgbm import LGBMClassifier
@@ -94,8 +101,8 @@ if __name__ == '__main__':
 
     pen.start(__file__)
 
-    train_data_path = './sample/train_data.csv'
-    label_data_path = './sample/label_data.csv'
+    train_data_path = current_dir + '/train_data.csv'
+    label_data_path = current_dir + '/label_data.csv'
 
     # データの読み込み
     train_data_player = DataFramePrayer.load_csv(train_data_path)

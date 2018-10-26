@@ -12,6 +12,10 @@ import ppapackage as ppap
 ```
 
 """
+from os import path
+import sys
+current_dir = path.abspath(path.dirname(__file__))
+sys.path.append(current_dir)
 
 from cross_validator import CrossValidator
 from cassette import ConversionCassette
@@ -21,3 +25,4 @@ from ppap_exception import EmptyCassetteException
 import pen
 
 pen.read_conf()
+
