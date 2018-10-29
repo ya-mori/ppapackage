@@ -7,6 +7,7 @@ import time
 import configparser
 from logger import logger as logger
 import pickle
+import pathlib.Path as Path
 
 
 def start(file_name):
@@ -39,27 +40,26 @@ def read_conf():
     config = configparser.ConfigParser().read(path)
 
 
-def save_obj(object, name, path):
+def save_obj(obj: any, name: str, path: str) -> None:
     """
-    オブジェクトをpickleによってバイナリデータとして永続化します。
+    オブジェクトを pickle　によってバイナリデータとして保存します。
 
-    :param object:
-    :param name:
-    :param path:
-    :return:
+    :param obj: 保存したいオプジェクト
+    :param name: 保存名
+    :param path: 保存するディレクトリの存在場所
     """
-    with open(path + '/' + name, 'wb') as f:
-        pickle.dump(object, f)
+    with open(Path(path) / Path(name), 'wb') as f:
+        pickle.dump(obj, f)
 
 
-def read_obj(path):
+def read_obj(path: str) -> any:
     """
-    オブジェクトをpickieによってバイナリデータから復元します。
+    オブジェクトを pickle によってバイナリデータから復元します。
 
-    :param path:
-    :return:
+    :param path: 復元したいバイナリデータの存在場所
+    :return: 復元したオブジェクト
     """
     with open(path, 'rb') as f:
         obj = pickle.load(f)
-    print(obj)
+    return obj
 
