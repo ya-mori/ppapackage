@@ -8,8 +8,6 @@ current_dir = path.abspath(path.dirname(__file__))
 parent_dir = path.abspath(path.join(current_dir, pardir))
 sys.path.append(parent_dir)
 
-print(current_dir)
-
 import pandas as pd
 from lightgbm import LGBMClassifier
 
@@ -18,7 +16,7 @@ import lightgbm_executer as lgbexe
 from logger import logger as logger
 from cross_validator import CrossValidator
 from cassette import ConversionCassette
-from data_frame_prayer import DataFramePrayer
+from data_frame_player import DataFramePlayer
 
 """
 ケースにあわせて定義するもの
@@ -105,13 +103,17 @@ if __name__ == '__main__':
     label_data_path = current_dir + '/label_data.csv'
 
     # データの読み込み
-    train_data_player = DataFramePrayer.load_csv(train_data_path)
-    label_data_player = DataFramePrayer.load_csv(label_data_path)
+    # プレイヤーを通してCSVを読み込むことが出来ます。
+    train_data_player = DataFramePlayer.load_csv(train_data_path)
+    label_data_player = DataFramePlayer.load_csv(label_data_path)
 
-    # 平均値の算出
-    train_data_mean = MeanCassette.extract(train_data_player.df)
-
+    # プレイヤーを使った加工の処理
+    # playerにカセットをセットして、play()することで、加工が行われます。
+    # 加工結果はプレイヤー内部のデータフレームに保持されます。
     label_data_player.add_cassette(CleanLabelCassette).play()
+
+    # カセット単体でも使用することが出来ます
+    train_data_mean = MeanCassette.extract(train_data_player.df)
 
     spilt = 5
 
@@ -126,11 +128,13 @@ if __name__ == '__main__':
     feature_columns = train_data_player.df.columns
 
     sub_predicts = pd.DataFrame()
+    # クロスバリデータをforで回すことで、計算objectveの結果だけをイテレーションごとに取り出すことが出来ます。
     for folds, clf in validator:
         predicts = clf.predict_proba(train_data_player.df, num_iteration=clf.best_iteration_)[:, 1] / spilt
         fold_importance_df = lgbexe.analyze_lightgbm(clf, feature_columns)
 
-    DataFramePrayer(sub_predicts).save_csv('result', '.', is_attend_date=True)
+    # プレイヤーを通じて内部のデータフレームをcsv形式で保存することが出来ます
+    DataFramePlayer(sub_predicts).save_csv('result', '.', is_attend_date=True)
 
     pen.end(__file__)
 

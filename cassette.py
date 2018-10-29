@@ -1,6 +1,6 @@
 import pandas as pd
 
-from ppap_exception import CassetteValidateException
+from ppap_exception import CassetteValidateError
 
 
 class CassetteValidator:
@@ -11,7 +11,7 @@ class CassetteValidator:
     @classmethod
     def run(cls, dataframe):
         if type(dataframe) is pd.DataFrame:
-            raise CassetteValidateException
+            raise CassetteValidateError
 
 
 class ConversionCassette:

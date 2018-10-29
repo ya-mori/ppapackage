@@ -19,9 +19,9 @@ sys.path.append(current_dir)
 
 from cross_validator import CrossValidator
 from cassette import ConversionCassette
-from data_frame_prayer import DataFramePrayer
-from ppap_exception import OverCassetteException
-from ppap_exception import EmptyCassetteException
+from data_frame_player import DataFramePlayer
+from ppap_exception import OverCassetteError
+from ppap_exception import EmptyCassetteError
 import pen
 
 pen.read_conf()

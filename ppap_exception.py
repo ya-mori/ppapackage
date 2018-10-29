@@ -1,24 +1,24 @@
 
 
-class PPAPException(Exception):
+class PPAPError(Exception):
     """
     ProvidePythonAidPacker の基底Exceptionです。
     """
 
 
-class EmptyCassetteException(PPAPException):
+class EmptyCassetteError(PPAPError):
     """
     カセットがセットされていない場合にスローさせるExceptionです。
     """
 
 
-class OverCassetteException(PPAPException):
+class OverCassetteError(PPAPError):
     """
     すでにカセットがセットされている場合にスローさせるExceptionです。
     """
 
 
-class CassetteValidateException(PPAPException):
+class CassetteValidateError(PPAPError):
     """
     カセットのバリデーションチェックでスローさせるExceptionです。
     """
