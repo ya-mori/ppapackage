@@ -1,7 +1,5 @@
 import pandas as pd
 from typing import Callable
-from typing import TypeVar
-from sklearn.model_selection import StratifiedKFold
 from sklearn.model_selection import KFold
 
 
@@ -37,11 +35,9 @@ class CrossValidator:
         self.k_folds = self.k_fold(spilt)
         self.index = 0
 
-    # 新しいイテレータの作成
     def __iter__(self):
         return self
 
-    # イテレータを進める
     def __next__(self) -> tuple:
         if self.index >= self.spilt - 1:
             raise StopIteration

@@ -18,6 +18,7 @@ class DataFramePlayer:
         :param dataframe: pandasデータフレーム
         :param cassette: 変換カセット
         """
+        # DOTO データフレームの情報を出力する
         self.df = dataframe
         self.cassette = cassette
 
@@ -48,7 +49,7 @@ class DataFramePlayer:
         self.df.to_csv(file_name)
         logger.info("{0}を保存しました。".format(file_name))
 
-    def add_cassette(self, cassette: ConversionCassette) -> 'DataFramePlayer':
+    def add(self, cassette: ConversionCassette) -> 'DataFramePlayer':
         """
         Cassette を追加します。
 
@@ -79,6 +80,6 @@ class DataFramePlayer:
 if __name__ == '__main__':
 
     player = DataFramePlayer(pd.DataFrame())
-    player.add_cassette(ConversionCassette)
+    player.add(ConversionCassette)
     player.play()
-    player.add_cassette(ConversionCassette)
+    player.add(ConversionCassette)

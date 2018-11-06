@@ -110,7 +110,7 @@ if __name__ == '__main__':
     # プレイヤーを使った加工の処理
     # playerにカセットをセットして、play()することで、加工が行われます。
     # 加工結果はプレイヤー内部のデータフレームに保持されます。
-    label_data_player.add_cassette(CleanLabelCassette).play()
+    label_data_player.add(CleanLabelCassette).play()
 
     # カセット単体でも使用することが出来ます
     train_data_mean = MeanCassette.extract(train_data_player.df)
